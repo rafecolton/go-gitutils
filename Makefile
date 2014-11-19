@@ -24,7 +24,6 @@ coverage: $(PWD)/coverage
 	go get -u code.google.com/p/go.tools/cmd/cover || go get -u golang.org/x/tools/cmd/cover
 	go get -u github.com/axw/gocov/gocov
 	bash coverage
-	@find . -type f -name '*.coverprofile' -exec rm {} \;
 
 $(PWD)/coverage:
 	curl -sL https://raw.githubusercontent.com/rafecolton/fmtpolice/master/coverage -o $@
