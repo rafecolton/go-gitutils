@@ -8,10 +8,6 @@ test: .fmtpolice
 	go test ./...
 	@find . -type f -name '*.test' -exec rm {} \;
 
-.PHONY: integration
-integration: .fmtpolice
-	INTEGRATION=1 go test ./...
-
 fmtpolice:
 	curl -sL https://raw.githubusercontent.com/rafecolton/fmtpolice/master/fmtpolice -o $@
 
@@ -28,6 +24,7 @@ coverage: $(PWD)/coverage
 	go get -u code.google.com/p/go.tools/cmd/cover || go get -u golang.org/x/tools/cmd/cover
 	go get -u github.com/axw/gocov/gocov
 	bash coverage
+	@find . -type f -name '*.coverprofile' -exec rm {} \;
 
 $(PWD)/coverage:
 	curl -sL https://raw.githubusercontent.com/rafecolton/fmtpolice/master/coverage -o $@

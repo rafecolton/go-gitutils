@@ -1,7 +1,7 @@
 package git_test
 
 import (
-	"github.com/rafecolton/docker-builder/git"
+	"github.com/rafecolton/go-gitutils"
 	"testing"
 )
 
