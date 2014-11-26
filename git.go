@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// Status is a type for reporting the status of a git repo
 type Status uint8
 
 const (
