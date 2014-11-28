@@ -6,15 +6,11 @@ export GOPATH
 .PHONY: test
 test: .fmtpolice
 	go test ./...
-	@$(MAKE) .test-cleanup
+	@find . -type f -name '*.test' -exec rm {} \;
 
 .PHONY: integration
 integration:
 	INTEGRATION=1 $(MAKE) test
-
-.PHONY: .test-cleanup
-.test-cleanup:
-	@find . -type f -name '*.test' -exec rm {} \;
 
 fmtpolice:
 	curl -sL https://raw.githubusercontent.com/rafecolton/fmtpolice/master/fmtpolice -o $@
