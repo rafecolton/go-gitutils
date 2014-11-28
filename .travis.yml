@@ -11,7 +11,7 @@ go:
 install:
 - make get
 script:
-- make test
+- make integration
 after_success:
 - make goveralls
 env:

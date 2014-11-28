@@ -26,3 +26,5 @@ coverage
 fmtpolice
 .env
 *.coverprofile
+_testing/*
+!_testing/.gitkeep

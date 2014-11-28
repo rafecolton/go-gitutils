@@ -6,6 +6,14 @@ export GOPATH
 .PHONY: test
 test: .fmtpolice
 	go test ./...
+	@$(MAKE) .test-cleanup
+
+.PHONY: integration
+integration:
+	INTEGRATION=1 $(MAKE) test
+
+.PHONY: .test-cleanup
+.test-cleanup:
 	@find . -type f -name '*.test' -exec rm {} \;
 
 fmtpolice:
