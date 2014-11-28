@@ -136,3 +136,10 @@ func TestUpToDateNeedToPull(t *testing.T) {
 		t.Errorf("status should be StatusNeedToPull")
 	}
 }
+
+func TestTag(t *testing.T) {
+	runner.(*fakeRunner).tag = "foo-tag"
+	if Tag("") != "foo-tag" {
+		t.Errorf("expected foo-tag, got %s", Tag(""))
+	}
+}
