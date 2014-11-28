@@ -23,6 +23,21 @@ const (
 	StatusDiverged
 )
 
+func (s Status) String() string {
+	switch s {
+	case StatusUpToDate:
+		return "StatusUpToDate"
+	case StatusNeedToPull:
+		return "StatusNeedToPull"
+	case StatusNeedToPush:
+		return "StatusNeedToPush"
+	case StatusDiverged:
+		return "StatusDiverged"
+	default:
+		return ""
+	}
+}
+
 // GitRemoteRegex is a regex for pulling account owner from the output of `git remote -v`
 var GitRemoteRegex = regexp.MustCompile(`^([^\t\n\f\r ]+)[\t\n\v\f\r ]+(git@github\.com:|(http[s]?|git):\/\/github\.com\/)([a-zA-Z0-9]{1}[a-zA-Z0-9-]*)\/([a-zA-Z0-9_.-]+)(\.git|[^\t\n\f\r ])+.*$`)
 
@@ -38,7 +53,7 @@ If the current working directory is not on a branch, the result will return
 "HEAD". In this case, branch will be estimated by parsing the output of the
 following:
 
-  git branch --contains $(git rev-parse -q HEAD)
+  git branch -ar --contains $(git rev-parse -q HEAD)
 */
 func Branch(top string) string {
 	initializeRunner()
@@ -57,7 +72,8 @@ func Branch(top string) string {
 			if len(branchStr) < 1 || string(branchStr[0]) == "*" {
 				continue
 			}
-			return strings.Trim(branchStr, " ")
+			sections := strings.Split(strings.Trim(branchStr, " \n"), "/")
+			return sections[len(sections)-1]
 		}
 	}
 	return branch

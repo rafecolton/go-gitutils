@@ -44,7 +44,7 @@ func (f *fakeRunner) BranchCommand(top string) ([]byte, error) {
 // branch 2
 
 func (r *realRunner) BranchCommand2(top string) ([]byte, error) {
-	cmd := exec.Command("git", "branch", "--contains", Sha(top))
+	cmd := exec.Command("git", "branch", "-ra", "--contains", Sha(top))
 	cmd.Dir = top
 	return cmd.Output()
 }

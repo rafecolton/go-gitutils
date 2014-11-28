@@ -8,6 +8,10 @@ test: .fmtpolice
 	go test ./...
 	@find . -type f -name '*.test' -exec rm {} \;
 
+.PHONY: integration
+integration:
+	INTEGRATION=1 $(MAKE) test
+
 fmtpolice:
 	curl -sL https://raw.githubusercontent.com/rafecolton/fmtpolice/master/fmtpolice -o $@
 
