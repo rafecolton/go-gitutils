@@ -48,7 +48,7 @@ func TestIntegration(t *testing.T) {
 	if !integration {
 		t.Skip()
 	}
-	runner = &realRunner{}
+	runner = nil
 
 	branch := Branch(testDirPath)
 	clean := IsClean(testDirPath)
