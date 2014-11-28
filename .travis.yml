@@ -13,7 +13,7 @@ install:
 script:
 - make integration
 after_success:
-- make goveralls
+- INTEGRATION=1 make goveralls
 env:
   global:
   - secure: IWge0CPyTK73cgx67+8MD21u8auLqgsSXUwd2kwTNFv1ToefLRQr8tb3xtCcnZvUc2OpCUgak+iEj5IGSdVrfgnSmZ8zFpobU/m1jYZjGWTwUEG547FXeS75Z1GjbWR8H04PMqN+bwLVXaD/7eBKz/cyXa0PH8Q/3AmSFoJ4yfo=
