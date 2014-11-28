@@ -136,11 +136,3 @@ func (r *realRunner) RemoteV(top string) ([]byte, error) {
 func (f *fakeRunner) RemoteV(top string) ([]byte, error) {
 	return []byte(f.remoteV), nil
 }
-
-func run(cr commandRunner) {
-}
-
-func otherFunc() {
-	run(&realRunner{})
-	run(&fakeRunner{})
-}
