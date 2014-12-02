@@ -156,3 +156,14 @@ func assertStatusString(status Status, str string, t *testing.T) {
 		t.Errorf("expected " + str + ", got " + status.String())
 	}
 }
+
+func TestPrintInvalidStatus(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			println("wheeeeee")
+		}
+	}()
+	var invalid uint8 = 86
+	assertStatusString(Status(invalid), "doesn't matter", t)
+	t.Error("should not get here")
+}
