@@ -152,8 +152,6 @@ func RemoteAccount(top string) string {
 
 	lines := strings.Split(string(remotes), "\n")
 
-	var ret string
-
 	for _, line := range lines {
 		matches := GitRemoteRegex.FindStringSubmatch(line)
 		if len(matches) == 7 {
@@ -163,7 +161,7 @@ func RemoteAccount(top string) string {
 		}
 	}
 
-	return ret
+	return ""
 }
 
 func initializeRunner() {
