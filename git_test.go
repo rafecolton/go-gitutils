@@ -143,3 +143,27 @@ func TestTag(t *testing.T) {
 		t.Errorf("expected foo-tag, got %s", Tag(""))
 	}
 }
+
+func TestStatusString(t *testing.T) {
+	assertStatusString(StatusUpToDate, "StatusUpToDate", t)
+	assertStatusString(StatusNeedToPull, "StatusNeedToPull", t)
+	assertStatusString(StatusNeedToPush, "StatusNeedToPush", t)
+	assertStatusString(StatusDiverged, "StatusDiverged", t)
+}
+
+func assertStatusString(status Status, str string, t *testing.T) {
+	if status.String() != str {
+		t.Errorf("expected " + str + ", got " + status.String())
+	}
+}
+
+func TestPrintInvalidStatus(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			println("wheeeeee")
+		}
+	}()
+	var invalid uint8 = 86
+	assertStatusString(Status(invalid), "doesn't matter", t)
+	t.Error("should not get here")
+}

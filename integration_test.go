@@ -32,11 +32,6 @@ func setupTestDir() error {
 			if err := exec.Command("git", "clone", testRepo, testDirPath).Run(); err != nil {
 				return err
 			}
-			cmd := exec.Command("git", "checkout", "-qf", testSha)
-			cmd.Dir = testDirPath
-			if err := cmd.Run(); err != nil {
-				return err
-			}
 		} else {
 			return err
 		}
@@ -44,11 +39,32 @@ func setupTestDir() error {
 	return nil
 }
 
-func TestIntegration(t *testing.T) {
+func resetToMaster() error {
+	cmd := exec.Command("git", "checkout", "master")
+	cmd.Dir = testDirPath
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func beforeEach(t *testing.T) error {
 	if !integration {
 		t.Skip()
 	}
 	runner = nil
+	cmd := exec.Command("git", "checkout", "-qf", testSha)
+	cmd.Dir = testDirPath
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func TestIntegration(t *testing.T) {
+	if err := beforeEach(t); err != nil {
+		t.Fatal(err)
+	}
 
 	branch := Branch(testDirPath)
 	clean := IsClean(testDirPath)
@@ -79,5 +95,20 @@ func TestIntegration(t *testing.T) {
 
 	if upToDate != StatusDiverged {
 		t.Errorf("expected status %s, got %s", StatusDiverged, upToDate)
+	}
+}
+
+func TestBranchUpToDate(t *testing.T) {
+	if err := beforeEach(t); err != nil {
+		t.Fatal(err)
+	}
+	if err := resetToMaster(); err != nil {
+		t.Fatal(err)
+	}
+
+	expected := "master"
+	actual := Branch(testDirPath)
+	if actual != expected {
+		t.Errorf("expected branch %q, got %q", expected, actual)
 	}
 }

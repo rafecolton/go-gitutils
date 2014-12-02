@@ -34,7 +34,7 @@ func (s Status) String() string {
 	case StatusDiverged:
 		return "StatusDiverged"
 	default:
-		return ""
+		panic("invalid status")
 	}
 }
 
@@ -152,18 +152,14 @@ func RemoteAccount(top string) string {
 
 	lines := strings.Split(string(remotes), "\n")
 
-	var ret string
-
 	for _, line := range lines {
 		matches := GitRemoteRegex.FindStringSubmatch(line)
-		if len(matches) == 7 {
-			if matches[1] == "origin" {
-				return matches[4]
-			}
+		if len(matches) == 7 && matches[1] == "origin" {
+			return matches[4]
 		}
 	}
 
-	return ret
+	return ""
 }
 
 func initializeRunner() {
