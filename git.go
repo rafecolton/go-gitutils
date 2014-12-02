@@ -154,10 +154,8 @@ func RemoteAccount(top string) string {
 
 	for _, line := range lines {
 		matches := GitRemoteRegex.FindStringSubmatch(line)
-		if len(matches) == 7 {
-			if matches[1] == "origin" {
-				return matches[4]
-			}
+		if len(matches) == 7 && matches[1] == "origin" {
+			return matches[4]
 		}
 	}
 
