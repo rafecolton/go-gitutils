@@ -34,7 +34,7 @@ func (s Status) String() string {
 	case StatusDiverged:
 		return "StatusDiverged"
 	default:
-		return ""
+		panic("invalid status")
 	}
 }
 
