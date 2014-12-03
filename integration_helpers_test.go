@@ -12,10 +12,15 @@ func beforeEach(t *testing.T) error {
 		t.Skip()
 	}
 	runner = nil
-	cmd := exec.Command("git", "checkout", "-qf", testSha)
-	cmd.Dir = testDirPath
-	if err := cmd.Run(); err != nil {
-		return err
+	return runCommands(exec.Command("git", "checkout", "-qf", testSha))
+}
+
+func runCommands(commands ...*exec.Cmd) error {
+	for _, cmd := range commands {
+		cmd.Dir = testDirPath
+		if err := cmd.Run(); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -36,37 +41,23 @@ func setupTestDir() error {
 }
 
 func resetToMaster() error {
-	cmd := exec.Command("git", "checkout", "master")
-	cmd.Dir = testDirPath
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-	return nil
+	return runCommands(exec.Command("git", "checkout", "master"))
 }
 
 func commit() error {
 	if err := ioutil.WriteFile(testDirPath+"/README.md", []byte("foo"), 0644); err != nil {
 		return err
 	}
-	cmd := exec.Command("git", "add", "README.md")
-	cmd.Dir = testDirPath
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		return err
+	commands := []*exec.Cmd{
+		exec.Command("git", "config", "--global", "user.email", "foo@example.com"),
+		exec.Command("git", "config", "--global", "user.name", "Foo Example"),
+		exec.Command("git", "add", "README.md"),
+		exec.Command("git", "commit", "-m", "foo"),
 	}
 
-	cmd = exec.Command("git", "commit", "-m", "foo")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Dir = testDirPath
-	return cmd.Run()
+	return runCommands(commands...)
 }
 
 func resetCommit() error {
-	cmd := exec.Command("git", "reset", "--hard", "HEAD^")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Dir = testDirPath
-	return cmd.Run()
+	return runCommands(exec.Command("git", "reset", "--hard", "HEAD^"))
 }
