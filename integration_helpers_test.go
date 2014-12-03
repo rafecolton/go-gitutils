@@ -48,11 +48,19 @@ func commit() error {
 	if err := ioutil.WriteFile(testDirPath+"/README.md", []byte("foo"), 0644); err != nil {
 		return err
 	}
-	commands := []*exec.Cmd{
+	ciCommands := []*exec.Cmd{
 		exec.Command("git", "config", "--global", "user.email", "foo@example.com"),
 		exec.Command("git", "config", "--global", "user.name", "Foo Example"),
+	}
+	commands := []*exec.Cmd{
 		exec.Command("git", "add", "README.md"),
 		exec.Command("git", "commit", "-m", "foo"),
+	}
+
+	if os.Getenv("CI") == "true" {
+		if err := runCommands(ciCommands...); err != nil {
+			return err
+		}
 	}
 
 	return runCommands(commands...)
