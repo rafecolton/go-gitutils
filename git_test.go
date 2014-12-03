@@ -58,6 +58,15 @@ func TestRemoteAccountWithoutSuffix(t *testing.T) {
 	}
 }
 
+func TestRemoteAccountCannotParse(t *testing.T) {
+	runner.(*fakeRunner).remoteV = `foo bar baz gorp`
+	expected := ""
+	actual := RemoteAccount("")
+	if actual != expected {
+		t.Errorf("expected %q, got %q", expected, actual)
+	}
+}
+
 func TestSha(t *testing.T) {
 	runner.(*fakeRunner).sha = "abc123\n"
 	actual := Sha("")

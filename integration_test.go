@@ -3,7 +3,6 @@ package git
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"testing"
 )
 
@@ -22,43 +21,6 @@ func init() {
 			os.Exit(1)
 		}
 	}
-}
-
-func setupTestDir() error {
-	exec.Command("git", "clone", testRepo, testDirPath)
-	_, err := os.Stat(testDirPath)
-	if err != nil {
-		if os.IsNotExist(err) {
-			if err := exec.Command("git", "clone", testRepo, testDirPath).Run(); err != nil {
-				return err
-			}
-		} else {
-			return err
-		}
-	}
-	return nil
-}
-
-func resetToMaster() error {
-	cmd := exec.Command("git", "checkout", "master")
-	cmd.Dir = testDirPath
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-	return nil
-}
-
-func beforeEach(t *testing.T) error {
-	if !integration {
-		t.Skip()
-	}
-	runner = nil
-	cmd := exec.Command("git", "checkout", "-qf", testSha)
-	cmd.Dir = testDirPath
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-	return nil
 }
 
 func TestIntegration(t *testing.T) {
@@ -110,5 +72,24 @@ func TestBranchUpToDate(t *testing.T) {
 	actual := Branch(testDirPath)
 	if actual != expected {
 		t.Errorf("expected branch %q, got %q", expected, actual)
+	}
+}
+
+func TestNeedToPushStatus(t *testing.T) {
+	if err := beforeEach(t); err != nil {
+		t.Fatal(err)
+	}
+	if err := resetToMaster(); err != nil {
+		t.Fatal(err)
+	}
+	if err := commit(); err != nil {
+		t.Fatal(err)
+	}
+	status := UpToDate(testDirPath)
+	if err := resetCommit(); err != nil {
+		t.Fatal(err)
+	}
+	if status != StatusNeedToPush {
+		t.Errorf("expected StatusNeedToPush, got " + status.String())
 	}
 }
