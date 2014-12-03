@@ -50,17 +50,23 @@ func commit() error {
 	}
 	cmd := exec.Command("git", "add", "README.md")
 	cmd.Dir = testDirPath
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
 		return err
 	}
 
 	cmd = exec.Command("git", "commit", "-m", "foo")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	cmd.Dir = testDirPath
 	return cmd.Run()
 }
 
 func resetCommit() error {
 	cmd := exec.Command("git", "reset", "--hard", "HEAD^")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	cmd.Dir = testDirPath
 	return cmd.Run()
 }
